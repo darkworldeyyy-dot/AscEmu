@@ -1,4 +1,3 @@
-```yaml
 name: AscEmu TBC Build
 
 on:
@@ -21,40 +20,10 @@ jobs:
           submodules: recursive
 
       - name: Configure CMake
-        run: >
-          cmake -S . -B ascemu_build
-          -G "Visual Studio 17 2022"
-          -A x64
-          -DBUILD_WITH_WARNINGS=0
-          -DBUILD_TOOLS=1
-          -DASCEMU_VERSION=TBC
+        run: cmake -S . -B ascemu_build -G "Visual Studio 17 2022" -A x64 -DBUILD_WITH_WARNINGS=0 -DBUILD_TOOLS=1 -DASCEMU_VERSION=TBC
 
       - name: Build AscEmu
         run: cmake --build ascemu_build --config Release --parallel 2
 
       - name: Install AscEmu
-        run: >
-          cmake --install ascemu_build
-          --config Release
-          --prefix "${{ github.workspace }}/AscEmu-Server"
-
-      - name: Copy generated configs
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path "AscEmu-Server\configs" | Out-Null
-          Copy-Item "configs\*.conf" "AscEmu-Server\configs\" -Force
-
-      - name: Create ZIP package
-        shell: pwsh
-        run: |
-          Compress-Archive -Path "AscEmu-Server\*" -DestinationPath "AscEmu-TBC-Server.zip" -Force
-
-      - name: Publish public GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: tbc-build-${{ github.run_number }}
-          name: AscEmu TBC Build ${{ github.run_number }}
-          files: AscEmu-TBC-Server.zip
-          fail_on_unmatched_files: true
-          make_latest: false
-```
+        run: cmake --install ascemu_build --config Release --prefix "$DIL0/AscEmu-Server"
