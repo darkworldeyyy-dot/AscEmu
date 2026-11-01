@@ -22,3 +22,10 @@ jobs:
 
       - name: Build AscEmu
         run: cmake --build ascemu_build --config Release --parallel 2
+      - name: Upload build files
+        uses: actions/upload-artifact@v4
+        with:
+          name: AscEmu-TBC-Build
+          path: ascemu_build/
+          if-no-files-found: error
+          retention-days: 7
