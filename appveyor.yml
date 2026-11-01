@@ -1,4 +1,4 @@
-# TBC cloud build
+
 image: Visual Studio 2019
 
 branches:
