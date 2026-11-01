@@ -48,4 +48,3 @@ jobs:
           files: AscEmu-TBC-Server.zip
           fail_on_unmatched_files: true
           make_latest: false
-```
