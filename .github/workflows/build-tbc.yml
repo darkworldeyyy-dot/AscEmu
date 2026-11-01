@@ -1,0 +1,24 @@
+
+name: AscEmu TBC Build
+
+on:
+  push:
+    branches:
+      - tbc-2.4.3-D4938
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Configure CMake
+        run: cmake -S . -B ascemu_build -G "Visual Studio 17 2022" -A x64 -DBUILD_WITH_WARNINGS=0 -DBUILD_TOOLS=1 -DASCEMU_VERSION=TBC
+
+      - name: Build AscEmu
+        run: cmake --build ascemu_build --config Release --parallel 2
