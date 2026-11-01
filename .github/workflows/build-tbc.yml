@@ -7,6 +7,9 @@ on:
       - tbc-2.4.3-D4938
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-2022
@@ -22,10 +25,19 @@ jobs:
 
       - name: Build AscEmu
         run: cmake --build ascemu_build --config Release --parallel 2
-      - name: Upload build files
-        uses: actions/upload-artifact@v4
+
+      - name: Install AscEmu
+        run: cmake --install ascemu_build --config Release --prefix "${{ github.workspace }}/AscEmu-Server"
+
+      - name: Create ZIP package
+        shell: pwsh
+        run: Compress-Archive -Path "AscEmu-Server\*" -DestinationPath "AscEmu-TBC-Server.zip" -Force
+
+      - name: Publish public GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: AscEmu-TBC-Build
-          path: ascemu_build/
-          if-no-files-found: error
-          retention-days: 7
+          tag_name: tbc-build-${{ github.run_number }}
+          name: AscEmu TBC Build ${{ github.run_number }}
+          files: AscEmu-TBC-Server.zip
+          fail_on_unmatched_files: true
+          make_latest: false
